@@ -5,7 +5,6 @@ const app = express();
 
 // Define a route handler for the root URL
 app.get('/', (req, res) => {
-    // Read the contents of the user.json file
     fs.readFile('DB/user.json', 'utf8', (err, data) => {
         if (err) {
             // Handle error if file reading fails
