@@ -8,8 +8,8 @@ This is a simple Express server project.
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
-    cd express-server
+    git clone <[repository-url](https://github.com/Moh20All/Server.git)>
+    cd Server
     ```
 
 2. Install dependencies:
