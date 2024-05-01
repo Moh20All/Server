@@ -1,31 +1,34 @@
 // Import the Express module
 const express = require('express');
-const fs = require('fs');
 const app = express();
+const db = require('./src/config/mysql');
 
-// Define a route handler for the root URL
-app.get('/', (req, res) => {
-    fs.readFile('DB/user.json', 'utf8', (err, data) => {
-        if (err) {
-            // Handle error if file reading fails
-            console.error('Error reading user.json:', err);
-            res.status(500).json({ message: 'Internal server error' });
-            return;
-        }
-        
-        try {
-            // Parse the JSON data
-            const userData = JSON.parse(data);
-            // Send the parsed JSON data as the response
-            res.json(userData);
-        } catch (parseError) {
-            // Handle error if JSON parsing fails
-            console.error('Error parsing user.json:', parseError);
-            res.status(500).json({ message: 'Internal server error' });
-        }
-    });
+// Parse JSON bodies
+app.use(express.json());
+
+// Route handler for login
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  
+  // Log the request
+  console.log('Request received:', req.body);
+  
+  // Example SQL query (assuming you're using MySQL)
+  const query = 'SELECT user_id, email FROM users WHERE email = ? AND password = ?';
+  db.query(query, [email, password], (err, results) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    
+    if (results.length === 0) {
+      return res.status(401).json({ success: false, message: 'Invalid email or password' });
+    }
+    
+    const user = results[0];
+    res.json({ success: true, user });
+  });
 });
-
 
 // Define the port number
 const port = process.env.PORT || 3000;
