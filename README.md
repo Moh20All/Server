@@ -17,6 +17,9 @@ This is a simple Express server project.
     ```bash
     npm install
     ```
+    ```bash
+    npm install mysql
+    ```
 
 ## Usage
 
