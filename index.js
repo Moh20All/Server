@@ -52,6 +52,32 @@ app.get('/check-assured/:userId', (req, res) => {
   });
 });
 
+// Endpoint to get details of an assurance with a specific ass_id
+app.get('/assure-details', (req, res) => {
+
+  const { ass_id } = req.query;
+
+  const query = `
+    SELECT assure.ass_id, assure.nom_ass, assure.prenom_ass, contrat.*, car.*
+    FROM assure
+    JOIN assure_contrat ON assure.ass_id = assure_contrat.ass_id
+    JOIN contrat ON assure_contrat.contrat_id = contrat.contrat_id
+    JOIN contrat_cars ON contrat.contrat_id = contrat_cars.contrat_id
+    JOIN car ON contrat_cars.car_id = car.car_id
+    WHERE assure.ass_id = ?;
+  `;
+
+  db.query(query, [ass_id], (err, results) => {
+    if (err) {
+      console.error('Error executing SQL query:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+
+    // Return the results as JSON
+    res.json({ success: true, data: results });
+  });
+});
+
 // Define the port number
 const port = process.env.PORT || 3000;
 
