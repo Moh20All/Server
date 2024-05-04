@@ -78,6 +78,28 @@ app.get('/assure-details', (req, res) => {
   });
 });
 
+
+
+
+app.get('/user-details/:userId', (req, res) => {
+  const userId = req.params.userId;
+  // Example SQL query to check if user exists in assure_compte table
+  const assureCompteQuery = 'SELECT FirstName,LastName FROM users WHERE user_id = ?';
+  db.query(assureCompteQuery, [userId], (err, assureCompteResults) => {
+    if (err) {
+      console.error('Database query error:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    
+    // If the user_id exists in the assure_compte table
+    if (assureCompteResults.length > 0) {
+      const user_id = assureCompteResults[0].user_id;
+      return res.json({ success: true, user_id });
+    } else {
+      return res.json({ success: false, message: 'User does not exist in assure_compte table' });
+    }
+  });
+});
 // Define the port number
 const port = process.env.PORT || 3000;
 
