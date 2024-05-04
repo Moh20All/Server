@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3306
--- Generation Time: May 02, 2024 at 11:42 AM
--- Server version: 8.2.0
--- PHP Version: 8.2.13
+-- Hôte : 127.0.0.1
+-- Généré le : sam. 04 mai 2024 à 02:32
+-- Version du serveur : 10.4.32-MariaDB
+-- Version de PHP : 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,28 +18,26 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `assurance`
+-- Base de données : `assurance`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assure`
+-- Structure de la table `assure`
 --
 
-DROP TABLE IF EXISTS `assure`;
-CREATE TABLE IF NOT EXISTS `assure` (
-  `ass_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `nom_ass` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `prenom_ass` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(18) COLLATE utf8mb4_general_ci NOT NULL,
-  `adress` varchar(25) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`ass_id`)
+CREATE TABLE `assure` (
+  `ass_id` varchar(10) NOT NULL,
+  `nom_ass` varchar(20) NOT NULL,
+  `prenom_ass` varchar(20) NOT NULL,
+  `email` varchar(30) NOT NULL,
+  `password` varchar(18) NOT NULL,
+  `adress` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `assure`
+-- Déchargement des données de la table `assure`
 --
 
 INSERT INTO `assure` (`ass_id`, `nom_ass`, `prenom_ass`, `email`, `password`, `adress`) VALUES
@@ -48,19 +46,16 @@ INSERT INTO `assure` (`ass_id`, `nom_ass`, `prenom_ass`, `email`, `password`, `a
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assure_compte`
+-- Structure de la table `assure_compte`
 --
 
-DROP TABLE IF EXISTS `assure_compte`;
-CREATE TABLE IF NOT EXISTS `assure_compte` (
-  `user_id` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
-  `ass_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  KEY `ncompte` (`ass_id`),
-  KEY `test` (`user_id`)
+CREATE TABLE `assure_compte` (
+  `user_id` varchar(5) NOT NULL,
+  `ass_id` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `assure_compte`
+-- Déchargement des données de la table `assure_compte`
 --
 
 INSERT INTO `assure_compte` (`user_id`, `ass_id`) VALUES
@@ -69,19 +64,16 @@ INSERT INTO `assure_compte` (`user_id`, `ass_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assure_contrat`
+-- Structure de la table `assure_contrat`
 --
 
-DROP TABLE IF EXISTS `assure_contrat`;
-CREATE TABLE IF NOT EXISTS `assure_contrat` (
-  `ass_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `contrat_id` varchar(8) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  KEY `assured` (`ass_id`),
-  KEY `assurance` (`contrat_id`)
+CREATE TABLE `assure_contrat` (
+  `ass_id` varchar(10) NOT NULL,
+  `contrat_id` varchar(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `assure_contrat`
+-- Déchargement des données de la table `assure_contrat`
 --
 
 INSERT INTO `assure_contrat` (`ass_id`, `contrat_id`) VALUES
@@ -90,21 +82,19 @@ INSERT INTO `assure_contrat` (`ass_id`, `contrat_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `car`
+-- Structure de la table `car`
 --
 
-DROP TABLE IF EXISTS `car`;
-CREATE TABLE IF NOT EXISTS `car` (
-  `car_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `marque` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `type` varchar(7) COLLATE utf8mb4_general_ci NOT NULL,
-  `energie` varchar(7) COLLATE utf8mb4_general_ci NOT NULL,
-  `model` varchar(7) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`car_id`)
+CREATE TABLE `car` (
+  `car_id` varchar(10) NOT NULL,
+  `marque` varchar(10) NOT NULL,
+  `type` varchar(7) NOT NULL,
+  `energie` varchar(7) NOT NULL,
+  `model` varchar(7) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `car`
+-- Déchargement des données de la table `car`
 --
 
 INSERT INTO `car` (`car_id`, `marque`, `type`, `energie`, `model`) VALUES
@@ -113,22 +103,20 @@ INSERT INTO `car` (`car_id`, `marque`, `type`, `energie`, `model`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contrat`
+-- Structure de la table `contrat`
 --
 
-DROP TABLE IF EXISTS `contrat`;
-CREATE TABLE IF NOT EXISTS `contrat` (
-  `contrat_id` varchar(8) COLLATE utf8mb4_general_ci NOT NULL,
-  `n_contrat` int NOT NULL,
+CREATE TABLE `contrat` (
+  `contrat_id` varchar(8) NOT NULL,
+  `n_contrat` int(11) NOT NULL,
   `date_debut` date NOT NULL,
   `date_fin` date NOT NULL,
-  `carte_grise` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `permis` varchar(9) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`contrat_id`)
+  `carte_grise` varchar(10) NOT NULL,
+  `permis` varchar(9) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `contrat`
+-- Déchargement des données de la table `contrat`
 --
 
 INSERT INTO `contrat` (`contrat_id`, `n_contrat`, `date_debut`, `date_fin`, `carte_grise`, `permis`) VALUES
@@ -137,19 +125,16 @@ INSERT INTO `contrat` (`contrat_id`, `n_contrat`, `date_debut`, `date_fin`, `car
 -- --------------------------------------------------------
 
 --
--- Table structure for table `contrat_cars`
+-- Structure de la table `contrat_cars`
 --
 
-DROP TABLE IF EXISTS `contrat_cars`;
-CREATE TABLE IF NOT EXISTS `contrat_cars` (
-  `contrat_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  `car_id` varchar(10) COLLATE utf8mb4_general_ci NOT NULL,
-  KEY `car` (`car_id`),
-  KEY `contrat` (`contrat_id`)
+CREATE TABLE `contrat_cars` (
+  `contrat_id` varchar(10) NOT NULL,
+  `car_id` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `contrat_cars`
+-- Déchargement des données de la table `contrat_cars`
 --
 
 INSERT INTO `contrat_cars` (`contrat_id`, `car_id`) VALUES
@@ -158,49 +143,99 @@ INSERT INTO `contrat_cars` (`contrat_id`, `car_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users`
+-- Structure de la table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
-  `email` varchar(30) COLLATE utf8mb4_general_ci NOT NULL,
-  `password` varchar(20) COLLATE utf8mb4_general_ci NOT NULL,
-  PRIMARY KEY (`user_id`)
+CREATE TABLE `users` (
+  `user_id` varchar(5) NOT NULL,
+  `email` varchar(30) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  `FirstName` varchar(50) DEFAULT NULL,
+  `LastName` varchar(50) DEFAULT NULL,
+  `DateOfBirth` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data for table `users`
+-- Déchargement des données de la table `users`
 --
 
-INSERT INTO `users` (`user_id`, `email`, `password`) VALUES
-('D45FQ', 'allalimohabaha@gmail.com', 'admin'),
-('TF45S', 'admin@admin.com', 'allali2004');
+INSERT INTO `users` (`user_id`, `email`, `password`, `FirstName`, `LastName`, `DateOfBirth`) VALUES
+('D45FQ', 'allalimohabaha@gmail.com', 'admin', NULL, NULL, NULL),
+('TF45S', 'admin@admin.com', 'allali2004', 'Moha', 'Allali', NULL);
 
 --
--- Constraints for dumped tables
+-- Index pour les tables déchargées
 --
 
 --
--- Constraints for table `assure_compte`
+-- Index pour la table `assure`
+--
+ALTER TABLE `assure`
+  ADD PRIMARY KEY (`ass_id`);
+
+--
+-- Index pour la table `assure_compte`
 --
 ALTER TABLE `assure_compte`
-  ADD CONSTRAINT `ncompte` FOREIGN KEY (`ass_id`) REFERENCES `assure` (`ass_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `test` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD KEY `ncompte` (`ass_id`),
+  ADD KEY `test` (`user_id`);
 
 --
--- Constraints for table `assure_contrat`
+-- Index pour la table `assure_contrat`
 --
 ALTER TABLE `assure_contrat`
-  ADD CONSTRAINT `assurance` FOREIGN KEY (`contrat_id`) REFERENCES `contrat` (`contrat_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `assured` FOREIGN KEY (`ass_id`) REFERENCES `assure` (`ass_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD KEY `assured` (`ass_id`),
+  ADD KEY `assurance` (`contrat_id`);
 
 --
--- Constraints for table `contrat_cars`
+-- Index pour la table `car`
+--
+ALTER TABLE `car`
+  ADD PRIMARY KEY (`car_id`);
+
+--
+-- Index pour la table `contrat`
+--
+ALTER TABLE `contrat`
+  ADD PRIMARY KEY (`contrat_id`);
+
+--
+-- Index pour la table `contrat_cars`
 --
 ALTER TABLE `contrat_cars`
-  ADD CONSTRAINT `car` FOREIGN KEY (`car_id`) REFERENCES `car` (`car_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  ADD CONSTRAINT `contrat` FOREIGN KEY (`contrat_id`) REFERENCES `contrat` (`contrat_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+  ADD KEY `car` (`car_id`),
+  ADD KEY `contrat` (`contrat_id`);
+
+--
+-- Index pour la table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- Contraintes pour les tables déchargées
+--
+
+--
+-- Contraintes pour la table `assure_compte`
+--
+ALTER TABLE `assure_compte`
+  ADD CONSTRAINT `ncompte` FOREIGN KEY (`ass_id`) REFERENCES `assure` (`ass_id`),
+  ADD CONSTRAINT `test` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
+
+--
+-- Contraintes pour la table `assure_contrat`
+--
+ALTER TABLE `assure_contrat`
+  ADD CONSTRAINT `assurance` FOREIGN KEY (`contrat_id`) REFERENCES `contrat` (`contrat_id`),
+  ADD CONSTRAINT `assured` FOREIGN KEY (`ass_id`) REFERENCES `assure` (`ass_id`);
+
+--
+-- Contraintes pour la table `contrat_cars`
+--
+ALTER TABLE `contrat_cars`
+  ADD CONSTRAINT `car` FOREIGN KEY (`car_id`) REFERENCES `car` (`car_id`),
+  ADD CONSTRAINT `contrat` FOREIGN KEY (`contrat_id`) REFERENCES `contrat` (`contrat_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
