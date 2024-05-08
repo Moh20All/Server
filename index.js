@@ -35,7 +35,7 @@ app.post('/login', (req, res) => {
 app.get('/check-assured/:userId', (req, res) => {
   const userId = req.params.userId;
   // Example SQL query to check if user exists in assure_compte table
-  const assureCompteQuery = 'SELECT user_id FROM assure_compte WHERE user_id = ?';
+  const assureCompteQuery = 'SELECT ass_id FROM assure_compte WHERE user_id = ?';
   db.query(assureCompteQuery, [userId], (err, assureCompteResults) => {
     if (err) {
       console.error('Database query error:', err);
@@ -72,7 +72,7 @@ app.get('/assure-details', (req, res) => {
       console.error('Error executing SQL query:', err);
       return res.status(500).json({ success: false, message: 'Internal server error' });
     }
-
+    console.log(results);
     // Return the results as JSON
     res.json({ success: true, data: results });
   });
@@ -100,6 +100,41 @@ app.get('/user-details/:userId', (req, res) => {
     }
   });
 });
+
+app.post('/insert-request', (req, res) => {
+  // Extract request data from the request body
+  const { id, name, type, status } = req.body;
+
+  // Construct the SQL query
+  const query = 'INSERT INTO requests (id, name, type, status) VALUES (?, ?, ?, ?)';
+
+  // Execute the SQL query with the provided data
+  db.query(query, [id, name, type, status], (err, result) => {
+    if (err) {
+      console.error('Error inserting request:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    
+    // Return success response
+    res.json({ success: true, message: 'Request inserted successfully' });
+  });
+});
+app.get('/fetch-requests', (req, res) => {
+  // Construct the SQL query to fetch all requests
+  const query = 'SELECT * FROM requests';
+
+  // Execute the SQL query
+  db.query(query, (err, results) => {
+    if (err) {
+      console.error('Error fetching requests:', err);
+      return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+    
+    // Return the results as JSON
+    res.json({ success: true, data: results });
+  });
+});
+
 // Define the port number
 const port = process.env.PORT || 3000;
 
