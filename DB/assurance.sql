@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1:3306
--- Generation Time: May 08, 2024 at 02:04 AM
+-- Generation Time: May 09, 2024 at 01:37 AM
 -- Server version: 8.2.0
 -- PHP Version: 8.2.13
 
@@ -162,24 +162,45 @@ INSERT INTO `contrat_cars` (`contrat_id`, `car_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `notification`
+--
+
+DROP TABLE IF EXISTS `notification`;
+CREATE TABLE IF NOT EXISTS `notification` (
+  `user_id` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int NOT NULL AUTO_INCREMENT,
+  `title` text COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `status` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `assureid` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `requests`
 --
 
 DROP TABLE IF EXISTS `requests`;
 CREATE TABLE IF NOT EXISTS `requests` (
-  `id` varchar(5) COLLATE utf8mb4_general_ci NOT NULL,
-  `name` text COLLATE utf8mb4_general_ci NOT NULL,
+  `id` varchar(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `name` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `type` int NOT NULL,
   `status` int NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `n_requests` int NOT NULL AUTO_INCREMENT,
+  `company` text COLLATE utf8mb4_general_ci NOT NULL,
+  PRIMARY KEY (`id`,`n_requests`),
+  UNIQUE KEY `unique_n_requests` (`n_requests`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `requests`
 --
 
-INSERT INTO `requests` (`id`, `name`, `type`, `status`) VALUES
-('TF45S', 'Allali mohamed baha eddine', 1, 0);
+INSERT INTO `requests` (`id`, `name`, `type`, `status`, `n_requests`, `company`) VALUES
+('TF45S', 'Allali mohamed baha eddine', 1, 0, 1, 'saa'),
+('YXBJX', 'allali mohamed', 1, 0, 2, 'saa');
 
 -- --------------------------------------------------------
 
@@ -201,7 +222,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`user_id`, `email`, `password`) VALUES
 ('D45FQ', 'allalimohabaha@gmail.com', 'admin'),
-('TF45S', 'admin@admin.com', 'allali2004');
+('TF45S', 'admin@admin.com', 'allali2004'),
+('YXBJX', 'allalimohamed@gmail.com', 'allali2020');
 
 --
 -- Constraints for dumped tables
@@ -227,6 +249,12 @@ ALTER TABLE `assure_contrat`
 ALTER TABLE `contrat_cars`
   ADD CONSTRAINT `car` FOREIGN KEY (`car_id`) REFERENCES `car` (`car_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   ADD CONSTRAINT `contrat` FOREIGN KEY (`contrat_id`) REFERENCES `contrat` (`contrat_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+
+--
+-- Constraints for table `notification`
+--
+ALTER TABLE `notification`
+  ADD CONSTRAINT `assureid` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
