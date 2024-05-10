@@ -42,11 +42,12 @@ app.get('/check-assured/:userId', (req, res) => {
       console.error('Database query error:', err);
       return res.status(500).json({ success: false, message: 'Internal server error' });
     }
+
     
     // If the user_id exists in the assure_compte table
     if (assureCompteResults.length > 0) {
       const user_id = assureCompteResults[0].user_id;
-      console.log(user_id)
+      console.log("User Assure : "+user_id)
       return res.json({ success: true, user_id });
     } else {
       console.log("Not assure")
@@ -116,67 +117,71 @@ function generateId() {
 
 app.post('/insert-request', (req, res) => {
   // Extract request data from the request body
-  const { firstName, lastName, email, password ,idcmp} = req.body;
+  const { firstName, lastName, email, pass, company } = req.body;
 
   console.log('Received request:', req.body);
 
   // Generate a unique ID
   let id;
   do {
-      id = generateId();
-      // Check if the generated ID already exists in the database
-      db.query('SELECT id FROM requests WHERE id = ?', [id], (err, result) => {
-          if (err) {
-              console.error('Error checking ID existence:', err);
-              return res.status(500).json({ success: false, message: 'Error checking ID existence' });
-          }
-          if (result.length > 0) {
-              // If ID exists, generate a new one
-              id = generateId();
-          }
-      });
+    id = generateId();
+    // Check if the generated ID already exists in the database
+    db.query('SELECT id FROM requests WHERE id = ?', [id], (err, result) => {
+      if (err) {
+        console.error('Error checking ID existence:', err);
+        return res.status(500).json({ success: false, message: 'Error checking ID existence' });
+      }
+      if (result.length > 0) {
+        // If ID exists, generate a new one
+        id = generateId();
+      }
+    });
   } while (!id);
 
   console.log('Generated ID:', id);
 
-  // Construct the SQL queries
-  const requestQuery = 'INSERT INTO requests (id, name, type, status,company) VALUES (?, ?, ?, ?,?)';
-  const userQuery = 'INSERT INTO users (user_id, email, password) VALUES (?, ?, ?)';
-
+  // Construct the SQL query to insert into requests table
+  const requestQuery = 'INSERT INTO requests (id, name, type, status, company) VALUES (?, ?, ?, ?, ?)';
   // Combine firstName and lastName into a single name
   const name = `${firstName} ${lastName}`;
 
   console.log('Constructed name:', name);
+  console.log('Constructed name:', company.idcmp.toString());
+  const companies = ["SAA", "CAAT", "Trust", "Alliance"];
+  const selectedCompany = companies[company.idcmp];
+  // Execute the SQL query to insert into requests table
+  db.query(requestQuery, [id, name, 1, 0,selectedCompany], (err1, result1) => {
+    if (err1) {
+      console.error('Error inserting request:', err1);
+      return res.status(500).json({ success: false, message: 'Error inserting request' });
+    }
 
-  // Execute the first SQL query to insert into requests table
-  db.query(requestQuery, [id, name, 1, 0,idcmp], (err1, result1) => {
-      if (err1) {
-          console.error('Error inserting request:', err1);
-          return res.status(500).json({ success: false, message: 'Error inserting request' });
+    console.log('Inserted request:', result1);
+
+    // Execute the SQL query to insert into users table
+    const userQuery = 'INSERT INTO users (user_id, email, password) VALUES (?, ?, ?)';
+    db.query(userQuery, [id, email, pass], (err2, result2) => {
+      if (err2) {
+        console.error('Error inserting user:', err2);
+        // Rollback the first query if the second query fails
+        db.query('DELETE FROM requests WHERE id = ?', [id], (rollbackErr, rollbackResult) => {
+          if (rollbackErr) {
+            console.error('Error rolling back request insertion:', rollbackErr);
+          }
+        });
+        return res.status(500).json({ success: false, message: 'Error inserting user' });
       }
 
-      console.log('Inserted request:', result1);
+      console.log('Inserted user:', result2);
 
-      // Execute the second SQL query to insert into users table
-      db.query(userQuery, [id, email, password], (err2, result2) => {
-          if (err2) {
-              console.error('Error inserting user:', err2);
-              // Rollback the first query if the second query fails
-              db.query('DELETE FROM requests WHERE id = ?', [id], (rollbackErr, rollbackResult) => {
-                  if (rollbackErr) {
-                      console.error('Error rolling back request insertion:', rollbackErr);
-                  }
-              });
-              return res.status(500).json({ success: false, message: 'Error inserting user' });
-          }
-          
-          console.log('Inserted user:', result2);
-
-          // Return success response
-          res.json({ success: true, message: 'Request and user inserted successfully' });
-      });
+      // Return success response
+      res.json({ success: true, message: 'Request and user inserted successfully' });
+    });
   });
 });
+
+
+
 
 app.get('/fetch-requests', (req, res) => {
   // Construct the SQL query to fetch all requests
@@ -195,6 +200,12 @@ app.get('/fetch-requests', (req, res) => {
   });
 });
 
+
+app.post('/approve-user', (req, res) => {
+  // Log the received data
+  console.log('Received data for user approval:', req.body);
+  res.sendStatus(200); // Send a success response
+});
 // Define the port number
 const port = process.env.PORT || 3000;
 
